@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text style={styles.loginTitle}>Login</Text>
+        <Text style={styles.loginTitle}>Sign up</Text>
       </View>
       <View style={styles.loginFieldsWrapper}>
         <Input
@@ -17,6 +17,26 @@ const LoginScreen = ({ navigation }) => {
           }}
         />
         <Input
+          placeholder="Username"
+          leftIcon={{
+            type: "font-awesome",
+            name: "user",
+            paddingRight: 10,
+            color: "#A9B9CD",
+          }}
+        />
+
+        <Input
+          placeholder="Cell Number"
+          leftIcon={{
+            type: "font-awesome",
+            name: "phone",
+            paddingRight: 10,
+            color: "#A9B9CD",
+          }}
+        />
+
+        <Input
           placeholder="Password"
           secureTextEntry={true}
           leftIcon={{
@@ -25,33 +45,14 @@ const LoginScreen = ({ navigation }) => {
             paddingRight: 10,
             color: "#A9B9CD",
           }}
-          rightIcon={<TextClicker name="Forgot?" />}
         />
         <TouchableOpacity style={styles.logBtn}>
-          <Text style={styles.logBtnText}>Login</Text>
+          <Text style={styles.logBtnText}>Sign up</Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Text>Don't have an account? </Text>
-          <TextClicker
-            name="Register"
-            navigateTo="Sign up"
-            navigation={navigation}
-          />
-        </View>
       </View>
     </View>
   );
 };
-const TextClicker = (props) => {
-  return (
-    <TouchableOpacity
-      onPress={() => props.navigation.navigate(props.navigateTo)}
-    >
-      <Text style={styles.textClick}>{props.name}</Text>
-    </TouchableOpacity>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   logBtn: {
     borderRadius: 20,
     width: "100%",
-    height: "20%",
+    height: "15%",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0364ff",
