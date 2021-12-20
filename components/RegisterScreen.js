@@ -28,6 +28,7 @@ const LoginScreen = () => {
 
         <Input
           placeholder="Cell Number"
+          keyboardType="number-pad"
           leftIcon={{
             type: "font-awesome",
             name: "phone",

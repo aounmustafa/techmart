@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Input, ListItem } from "react-native-elements";
 
-const PostAdScreen = ({ navigation }) => {
+const CategorySelect = ({ navigation }) => {
   navigation.setOptions({
     title: "Choose Category",
     headerTintColor: "white",
@@ -40,8 +40,12 @@ const PostAdScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <CategorySelector list={list} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <CategorySelector
+          list={list}
+          navigation={navigation}
+          navigateTo="Add Details"
+        />
         {/* <TextInput placeholder="Enter Title" style={styles.fields} /> */}
       </ScrollView>
     </View>
@@ -56,7 +60,11 @@ const CategorySelector = (props) => {
           <ListItem.Content>
             <ListItem.Title>{item}</ListItem.Title>
           </ListItem.Content>
-          <TouchableOpacity onPress={() => alert("Clicked")}>
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate(props.navigateTo, { item: item })
+            }
+          >
             <ListItem.Chevron color="#0364ff" size={25} />
           </TouchableOpacity>
         </ListItem>
@@ -71,13 +79,5 @@ const styles = StyleSheet.create({
     //justifyContent: "center",
     //alignItems: "center",
   },
-  fields: {
-    borderWidth: 0.5,
-    borderRadius: 8,
-    width: "90%",
-    height: "8%",
-    padding: 10,
-    marginTop: 10,
-  },
 });
-export default PostAdScreen;
+export default CategorySelect;
