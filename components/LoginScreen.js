@@ -12,7 +12,7 @@ const LoginScreen = ({ navigation }) => {
           leftIcon={{
             type: "font-awesome",
             name: "at",
-            paddingRight: 10,
+            paddingRight: "2%",
             color: "#A9B9CD",
           }}
         />
@@ -22,16 +22,19 @@ const LoginScreen = ({ navigation }) => {
           leftIcon={{
             type: "font-awesome",
             name: "lock",
-            paddingRight: 10,
+            paddingRight: "2%",
             color: "#A9B9CD",
           }}
           rightIcon={<TextClicker name="Forgot?" />}
         />
-        <TouchableOpacity style={styles.logBtn}>
+        <TouchableOpacity
+          style={styles.logBtn}
+          onPress={() => navigation.navigate("Home")}
+        >
           <Text style={styles.logBtnText}>Login</Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Text>Don't have an account? </Text>
+        <View style={{ flexDirection: "row", marginTop: "2%" }}>
+          <Text style={{ fontSize: 16 }}>Don't have an account? </Text>
           <TextClicker
             name="Register"
             navigateTo="Sign up"
@@ -47,7 +50,13 @@ const TextClicker = (props) => {
     <TouchableOpacity
       onPress={() => props.navigation.navigate(props.navigateTo)}
     >
-      <Text style={styles.textClick}>{props.name}</Text>
+      <Text
+        style={
+          props.name == "Register" ? styles.registerClick : styles.textClick
+        }
+      >
+        {props.name}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -65,14 +74,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0364ff",
-    margin: 10,
+    margin: "5%",
   },
   logBtnText: {
     color: "#fff",
     fontSize: 20,
   },
   title: {
-    marginLeft: 25,
+    marginLeft: "8%",
   },
   loginTitle: {
     color: "#25374d",
@@ -82,11 +91,16 @@ const styles = StyleSheet.create({
   textClick: {
     color: "#0364ff",
   },
+  registerClick: {
+    color: "#0364ff",
+    fontSize: 16,
+  },
+
   loginFieldsWrapper: {
     alignItems: "center",
     justifyContent: "center",
-    paddingRight: 20,
-    paddingLeft: 20,
+    paddingRight: "5%",
+    paddingLeft: "5%",
   },
 });
 export default LoginScreen;
