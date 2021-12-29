@@ -15,22 +15,26 @@ const HomeFeed = ({ navigation }) => {
       name: "Gaming PC",
       img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
       price: "Rs.45000",
+      cat: "Pre-Builds",
     },
 
     {
       name: "Graphics Card",
       img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
       price: "Rs.45000",
+      cat: "Graphics Card",
     },
     {
       name: "Mouse Pad",
       img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
       price: "Rs.45000",
+      cat: "Gaming Mouse",
     },
     {
       name: "RAM",
       img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
       price: "Rs.45000",
+      cat: "RAM",
     },
     {
       name: "SSD",
@@ -41,11 +45,13 @@ const HomeFeed = ({ navigation }) => {
       name: "Mouse",
       img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
       price: "Rs.45000",
+      cat: "Gaming Mouse",
     },
     {
       name: "Gaming PC",
       img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
       price: "Rs.45000",
+      cat: "Pre-Builds",
     },
   ]);
   const [cat, setCat] = React.useState([
@@ -56,13 +62,23 @@ const HomeFeed = ({ navigation }) => {
     "Gaming Mouse",
     "MotherBoards",
     "Pre-Builds",
-    "RAM",
   ]);
   const [search, setSearch] = React.useState("");
+  const [catPressed, setcatPressed] = React.useState("All");
 
   const searchResults = () => {
     return products.filter((element) => {
       return element.name.toUpperCase().includes(search.toUpperCase());
+    });
+  };
+  const searchResultsSpecific = () => {
+    return showFilteredCat().filter((element) => {
+      return element.name.toUpperCase().includes(search.toUpperCase());
+    });
+  };
+  const showFilteredCat = () => {
+    return products.filter((element) => {
+      return element.cat == catPressed;
     });
   };
 
@@ -79,10 +95,17 @@ const HomeFeed = ({ navigation }) => {
       />
       <View style={styles.catWrapper}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <Chip
+            type={catPressed == "All" ? "solid" : "outline"}
+            title="All"
+            onPress={() => setcatPressed("All")}
+            containerStyle={styles.chipAll}
+          />
           {cat.map((element, index) => (
             <Chip
-              type="outline"
+              type={catPressed == element ? "solid" : "outline"}
               title={element}
+              onPress={() => setcatPressed(element)}
               containerStyle={styles.chipContainer}
             />
           ))}
@@ -91,7 +114,15 @@ const HomeFeed = ({ navigation }) => {
 
       <FlatList
         numColumns={2}
-        data={search.length < 1 ? products : searchResults()}
+        data={
+          search.length < 1 && catPressed == "All"
+            ? products
+            : search.length < 1 && catPressed !== "All"
+            ? showFilteredCat()
+            : search.length >= 1 && catPressed == "All"
+            ? searchResults()
+            : searchResultsSpecific()
+        }
         renderItem={({ item }) => (
           <ProductCard
             name={item.name}
@@ -158,6 +189,15 @@ const styles = StyleSheet.create({
   chipContainer: {
     marginHorizontal: 5,
     marginVertical: 10,
+  },
+  pressedChipContainer: {
+    marginHorizontal: 5,
+    marginVertical: 10,
+  },
+  chipAll: {
+    marginHorizontal: 5,
+    marginVertical: 10,
+    width: "10%",
   },
 });
 export default HomeFeed;

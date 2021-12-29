@@ -10,7 +10,8 @@ import CategorySelect from "./components/CategorySelect";
 import AddDetails from "./components/AddDetails";
 import HomeFeed from "./components/HomeFeed";
 import FavScreen from "./components/FavScreen";
-import { Title } from "react-native-paper";
+
+// import { getAnalytics } from "firebase/analytics";
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -19,10 +20,10 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Sign up" component={Register} />
         <Stack.Screen name="Select Category" component={CategorySelect} />
         <Stack.Screen name="Add Details" component={AddDetails} />
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Sign up" component={Register} />
         <Stack.Screen name="Home" component={MyTabs} />
       </Stack.Navigator>
     </NavigationContainer>

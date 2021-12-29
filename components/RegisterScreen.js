@@ -1,6 +1,11 @@
+import { NavigationContainer } from "@react-navigation/native";
+import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
-const LoginScreen = () => {
+const RegisterScreen = ({ navigation }) => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -15,6 +20,8 @@ const LoginScreen = () => {
             paddingRight: 10,
             color: "#A9B9CD",
           }}
+          value={email}
+          onChange={setEmail}
         />
         <Input
           placeholder="Username"
@@ -46,8 +53,13 @@ const LoginScreen = () => {
             paddingRight: 10,
             color: "#A9B9CD",
           }}
+          value={password}
+          onChange={setPassword}
         />
-        <TouchableOpacity style={styles.logBtn}>
+        <TouchableOpacity
+          style={styles.logBtn}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Text style={styles.logBtnText}>Sign up</Text>
         </TouchableOpacity>
       </View>
@@ -91,4 +103,4 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
 });
-export default LoginScreen;
+export default RegisterScreen;
