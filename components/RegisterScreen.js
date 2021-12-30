@@ -5,6 +5,30 @@ import { Input } from "react-native-elements";
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [username, setUserName] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+
+  const FIREBASE_API_ENDPOINT =
+    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/"; // << LOOK Here, provide URL of your Firebase Realtime Database
+
+  const postData = () => {
+    let user = {
+      userName: username,
+      emailID: email,
+      pass: password,
+      cell: phone,
+    };
+    console.log(user);
+    var requestOptions = {
+      method: "POST",
+      body: JSON.stringify(user),
+    };
+
+    fetch(`${FIREBASE_API_ENDPOINT}/users.json`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
 
   return (
     <View style={styles.container}>
@@ -21,7 +45,7 @@ const RegisterScreen = ({ navigation }) => {
             color: "#A9B9CD",
           }}
           value={email}
-          onChange={setEmail}
+          onChangeText={setEmail}
         />
         <Input
           placeholder="Username"
@@ -31,8 +55,9 @@ const RegisterScreen = ({ navigation }) => {
             paddingRight: 10,
             color: "#A9B9CD",
           }}
+          value={username}
+          onChangeText={setUserName}
         />
-
         <Input
           placeholder="Cell Number"
           keyboardType="number-pad"
@@ -42,8 +67,9 @@ const RegisterScreen = ({ navigation }) => {
             paddingRight: 10,
             color: "#A9B9CD",
           }}
+          value={phone}
+          onChangeText={setPhone}
         />
-
         <Input
           placeholder="Password"
           secureTextEntry={true}
@@ -54,11 +80,12 @@ const RegisterScreen = ({ navigation }) => {
             color: "#A9B9CD",
           }}
           value={password}
-          onChange={setPassword}
+          onChangeText={setPassword}
         />
         <TouchableOpacity
           style={styles.logBtn}
-          onPress={() => navigation.navigate("Login")}
+          // onPress={() => navigation.navigate("Login")}
+          onPress={() => postData()}
         >
           <Text style={styles.logBtnText}>Sign up</Text>
         </TouchableOpacity>

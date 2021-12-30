@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
 
 import { getDatabase, ref, onValue } from "firebase/database";
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
+  const FIREBASE_API_ENDPOINT =
+    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
+  const email = "saounmustafa@gmail.com";
+
+  // const checkEmail = () => {
+  //   var requestOptions = {
+  //     method: 'GET'
+  //   };
+
+  //   fetch(`${FIREBASE_API_ENDPOINT}/users/${email}.json`, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => console.log(result))
+  //     .catch((error) => console.log('error', error));
+  // };
+
+  const authUser = async () => {
+    const response = await fetch(`${FIREBASE_API_ENDPOINT}/users/.json`)
+      .then((response) => response.json())
+      .then((result) => {
+        for (let i in result) {
+          if (result[i].emailID == email) {
+            console.log(result[i].pass);
+          }
+        }
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -34,7 +62,7 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
         <TouchableOpacity
           style={styles.logBtn}
           // onPress={() => navigation.navigate("Home")}
-          onPress={() => setIsLoggedIn(true)}
+          onPress={() => authUser()}
         >
           <Text style={styles.logBtnText}>Login</Text>
         </TouchableOpacity>
