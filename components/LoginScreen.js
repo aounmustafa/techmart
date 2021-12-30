@@ -4,15 +4,7 @@ import { Input } from "react-native-elements";
 
 import { getDatabase, ref, onValue } from "firebase/database";
 
-const LoginScreen = ({ navigation }) => {
-  const setupHighscoreListener = (userId) => {
-    const db = getDatabase();
-    const reference = ref(db, "users/" + userId);
-    onValue(reference, (snapshot) => {
-      const highscore = snapshot.val().highscore;
-      console.log("New high score: " + highscore);
-    });
-  };
+const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -41,7 +33,8 @@ const LoginScreen = ({ navigation }) => {
         />
         <TouchableOpacity
           style={styles.logBtn}
-          onPress={() => navigation.navigate("Home")}
+          // onPress={() => navigation.navigate("Home")}
+          onPress={() => setIsLoggedIn(true)}
         >
           <Text style={styles.logBtnText}>Login</Text>
         </TouchableOpacity>
