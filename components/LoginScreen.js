@@ -1,13 +1,22 @@
 import React, { useReducer } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { Input } from "react-native-elements";
 
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
-  const email = "saounmustafa@gmail.com";
+  const [email, setEmail] = React.useState("");
+  const [password, setpassword] = React.useState("");
+  const [loader, setLoader] = React.useState(false);
 
   // const checkEmail = () => {
   //   var requestOptions = {
@@ -21,12 +30,18 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   // };
 
   const authUser = async () => {
+    setLoader(true);
     const response = await fetch(`${FIREBASE_API_ENDPOINT}/users/.json`)
       .then((response) => response.json())
       .then((result) => {
         for (let i in result) {
           if (result[i].emailID == email) {
-            console.log(result[i].pass);
+            if (result[i].pass == password) {
+            }
+            setIsLoggedIn(true);
+          } else {
+            setLoader(false);
+            Alert.alert("Invalid Credentials", "Try Again");
           }
         }
       })
@@ -47,6 +62,8 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
             paddingRight: "2%",
             color: "#A9B9CD",
           }}
+          value={email}
+          onChangeText={setEmail}
         />
         <Input
           placeholder="Password"
@@ -58,16 +75,22 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
             color: "#A9B9CD",
           }}
           rightIcon={<TextClicker name="Forgot?" />}
+          value={password}
+          onChangeText={setpassword}
         />
-        <TouchableOpacity
-          style={styles.logBtn}
-          // onPress={() => navigation.navigate("Home")}
-          onPress={() => authUser()}
-        >
-          <Text style={styles.logBtnText}>Login</Text>
-        </TouchableOpacity>
+        {loader == false ? (
+          <TouchableOpacity style={styles.logBtn} onPress={() => authUser()}>
+            <Text style={styles.logBtnText}>Login</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.logBtn}>
+            <ActivityIndicator size="large" color="white" animating={loader} />
+          </TouchableOpacity>
+        )}
+
         <View style={{ flexDirection: "row", marginTop: "2%" }}>
           <Text style={{ fontSize: 16 }}>Don't have an account? </Text>
+
           <TextClicker
             name="Register"
             navigateTo="Sign up"

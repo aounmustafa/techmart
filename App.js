@@ -25,22 +25,23 @@ const App = () => {
     );
   };
 
-  const Fav = () => {
-    return <Icon name="heart" type="font-awesome" color="#BEC0C8" size={22} />;
-  };
-  const Home = () => {
-    return <Icon name="home" type="font-awesome" color="#BEC0C8" size={22} />;
-  };
-
-  const Plus = () => {
-    return <Icon name="plus" type="font-awesome" color="#BEC0C8" size={22} />;
-  };
-
-  const User = () => {
-    return <Icon name="user" type="font-awesome" color="#BEC0C8" size={22} />;
-  };
-
   function MyTabs() {
+    const Fav = () => {
+      return (
+        <Icon name="heart" type="font-awesome" color="#BEC0C8" size={22} />
+      );
+    };
+    const Home = () => {
+      return <Icon name="home" type="font-awesome" color="#BEC0C8" size={22} />;
+    };
+
+    const Plus = () => {
+      return <Icon name="plus" type="font-awesome" color="#BEC0C8" size={22} />;
+    };
+
+    const User = () => {
+      return <Icon name="user" type="font-awesome" color="#BEC0C8" size={22} />;
+    };
     const ProfileComp = ({ navigation }) => {
       return (
         <ProfileScreen setIsLoggedIn={setIsLoggedIn} navigation={navigation} />
