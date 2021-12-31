@@ -8,8 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { Input } from "react-native-elements";
-
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const FIREBASE_API_ENDPOINT =
@@ -17,17 +16,6 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = React.useState("");
   const [password, setpassword] = React.useState("");
   const [loader, setLoader] = React.useState(false);
-
-  // const checkEmail = () => {
-  //   var requestOptions = {
-  //     method: 'GET'
-  //   };
-
-  //   fetch(`${FIREBASE_API_ENDPOINT}/users/${email}.json`, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => console.log(result))
-  //     .catch((error) => console.log('error', error));
-  // };
 
   const authUser = async () => {
     setLoader(true);
@@ -37,7 +25,8 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
         for (let i in result) {
           if (result[i].emailID == email) {
             if (result[i].pass == password) {
-              console.log("checked");
+              let key = getKeyByValue(result, result[i]);
+              storeData([key, result[i]]);
               setIsLoggedIn(true);
               break;
             } else {
@@ -51,6 +40,23 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
       .catch((error) => console.log("error", error));
   };
 
+  const userDetails = (key, obj) => {
+    //obj.id = JSON.stringify(key);
+    console.log(typeof key);
+  };
+
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("@userLog", jsonValue);
+      console.log("saved");
+    } catch (e) {
+      // saving error
+    }
+  };
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find((key) => object[key] === value);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.title}>

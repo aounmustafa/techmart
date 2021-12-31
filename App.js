@@ -10,6 +10,8 @@ import AddDetails from "./components/AddDetails";
 import HomeFeed from "./components/HomeFeed";
 import FavScreen from "./components/FavScreen";
 import ProfileScreen from "./components/Profile";
+import FullAdScreen from "./components/FullAdScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -19,6 +21,19 @@ const Tab = createMaterialBottomTabNavigator();
 const App = () => {
   const [isLoggedin, setIsLoggedIn] = React.useState(false);
 
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@userLog");
+
+      jsonValue != null ? setIsLoggedIn(true) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+  React.useEffect(() => {
+    console.log("here");
+    getData();
+  }, []);
   const LoginScreenComp = ({ navigation }) => {
     return (
       <LoginScreen setIsLoggedIn={setIsLoggedIn} navigation={navigation} />
@@ -93,9 +108,8 @@ const App = () => {
             <Stack.Screen name="Sign up" component={Register} />
           </>
         )}
-
-        {/* <Stack.Screen name="Select Category" component={CategorySelect} /> */}
         <Stack.Screen name="Add Details" component={AddDetails} />
+        <Stack.Screen name="Full Ad" component={FullAdScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

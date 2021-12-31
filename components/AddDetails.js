@@ -5,12 +5,24 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Button,
+  Image,
 } from "react-native";
-import { Chip, CheckBox, Card, FAB } from "react-native-elements";
+import * as ImagePicker from "expo-image-picker";
+import { Chip, CheckBox, FAB } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
 const AddDetails = ({ navigation, route }) => {
+  const [title, setTitle] = React.useState("");
+  const [dsc, setDsc] = React.useState("");
+  const [price, setPrice] = React.useState("");
+  const [newchecked, setNewChecked] = React.useState(false);
+  const [usedchecked, setUsedChecked] = React.useState(false);
+  const [condition, setCondition] = React.useState("");
+  const [image, setImage] = React.useState(null);
+  const category = route.params.item;
+
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
   const postData = () => {
@@ -32,14 +44,21 @@ const AddDetails = ({ navigation, route }) => {
       .catch((error) => console.log("error", error));
   };
 
-  const [title, setTitle] = React.useState("");
-  const [dsc, setDsc] = React.useState("");
-  const [price, setPrice] = React.useState("");
-  const [newchecked, setNewChecked] = React.useState(false);
-  const [usedchecked, setUsedChecked] = React.useState(false);
-  const [condition, setCondition] = React.useState("");
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  const category = route.params.item;
+    if (!result.cancelled) {
+      setImage(result.uri);
+
+      //console.log(image);
+    }
+  };
   return (
     <View style={styles.container}>
       <ScrollView
@@ -115,7 +134,7 @@ const AddDetails = ({ navigation, route }) => {
             }}
           />
         </View>
-        <TouchableOpacity style={styles.insert}>
+        <TouchableOpacity style={styles.insert} onPress={() => pickImage()}>
           <Icon
             iconPosition="right"
             name="plus"
@@ -137,8 +156,18 @@ const AddDetails = ({ navigation, route }) => {
             marginTop: 40,
           }}
         >
-          <MyComp />
-          <MyComp />
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            {image && (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 200, height: 200 }}
+              />
+            )}
+          </View>
+          {/* <MyComp />
+          <MyComp /> */}
         </View>
       </ScrollView>
 
@@ -154,26 +183,26 @@ const AddDetails = ({ navigation, route }) => {
   );
 };
 
-const MyComp = () => {
-  return (
-    <Card
-      containerStyle={{
-        width: "40%",
-        padding: 0,
-        borderWidth: 2,
-      }}
-    >
-      {/* <Card.Title>none</Card.Title> */}
-      {/* <Card.Divider /> */}
-      <Card.Image
-        //  style={styles.image}
-        source={{
-          uri: "https://images.unsplash.com/photo-1628557119555-fb3d687cc310?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80",
-        }}
-      />
-    </Card>
-  );
-};
+// const MyComp = () => {
+//   return (
+//     <Card
+//       containerStyle={{
+//         width: "40%",
+//         padding: 0,
+//         borderWidth: 2,
+//       }}
+//     >
+//       {/* <Card.Title>none</Card.Title> */}
+//       {/* <Card.Divider /> */}
+//       <Card.Image
+//         //  style={styles.image}
+//         source={{
+//           uri: image,
+//         }}
+//       />
+//     </Card>
+//   );
+// };
 
 const styles = StyleSheet.create({
   container: {

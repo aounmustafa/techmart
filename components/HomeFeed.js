@@ -15,12 +15,14 @@ const HomeFeed = ({ navigation }) => {
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
   const getData = async () => {
+    // setRefresher(true);
     let myArr = [];
     const response = await fetch(`${FIREBASE_API_ENDPOINT}/ads.json`);
     const data = await response.json();
     for (let i in data) {
       myArr.push(data[i]);
     }
+
     setProducts(myArr);
   };
 
@@ -39,7 +41,7 @@ const HomeFeed = ({ navigation }) => {
   ]);
   const [search, setSearch] = React.useState("");
   const [catPressed, setcatPressed] = React.useState("All");
-
+  const [loader, setLoader] = React.useState(false);
   const searchResults = () => {
     return products.filter((element) => {
       return element.Title.toUpperCase().includes(search.toUpperCase());
@@ -85,7 +87,7 @@ const HomeFeed = ({ navigation }) => {
           ))}
         </ScrollView>
       </View>
-
+      {/* 
       <FlatList
         numColumns={2}
         data={
@@ -103,9 +105,12 @@ const HomeFeed = ({ navigation }) => {
             img="https://images.unsplash.com/photo-1621164071312-67bb68821b3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80"
             price={item.Price}
             navigation={navigation}
+            ad={item}
           />
         )}
-      />
+        onRefresh={() => getData()}
+        refreshing={false}
+      /> */}
     </View>
   );
 };
@@ -116,7 +121,7 @@ const ProductCard = (props) => {
         style={styles.cardImage}
         resizeMode="cover"
         source={{ uri: props.img }}
-        onPress={() => props.navigation.navigate("Login")}
+        onPress={() => props.navigation.navigate("Full Ad", { ad: props.ad })}
       />
       <View style={styles.cardBottomWrapper}>
         <Text style={styles.cardTitle}>{props.name}</Text>
