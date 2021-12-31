@@ -87,7 +87,7 @@ const HomeFeed = ({ navigation }) => {
           ))}
         </ScrollView>
       </View>
-      {/* 
+
       <FlatList
         numColumns={2}
         data={
@@ -110,7 +110,7 @@ const HomeFeed = ({ navigation }) => {
         )}
         onRefresh={() => getData()}
         refreshing={false}
-      /> */}
+      />
     </View>
   );
 };

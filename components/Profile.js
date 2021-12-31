@@ -9,7 +9,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { ListItem, Overlay } from "react-native-elements";
+import { ListItem, Overlay, Input } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
@@ -19,11 +19,16 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
   navigation.setOptions({ title: "Profile" });
+  const [newPass, setNewPass] = React.useState("");
   const [userDetails, setUserDetails] = React.useState({});
   const [id, setId] = React.useState("");
   const [visible, setVisible] = React.useState(false);
+  const [visible2, setVisible2] = React.useState(false);
   const toggleOverlay = () => {
     setVisible(!visible);
+  };
+  const toggleOverlay2 = () => {
+    setVisible2(!visible2);
   };
   const getData = async () => {
     try {
@@ -63,9 +68,31 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
       .catch((error) => console.log("error", error));
   };
 
+  const updatePass = () => {
+    var requestOptions = {
+      method: "PATCH",
+      body: JSON.stringify({
+        pass: newPass,
+      }),
+    };
+
+    fetch(`${FIREBASE_API_ENDPOINT}/users/${id}.json`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        toggleOverlay2();
+        setNewPass("");
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   return (
     <View style={styles.container}>
-      <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+      {/* these are two overlays for delete and change pass */}
+      <Overlay
+        isVisible={visible}
+        onBackdropPress={toggleOverlay}
+        overlayStyle={styles.Overlay}
+      >
         <Text style={styles.textPrimary}>
           Are you sure you want to delete you account?
         </Text>
@@ -77,6 +104,28 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
         </TouchableOpacity>
       </Overlay>
 
+      <Overlay
+        isVisible={visible2}
+        onBackdropPress={toggleOverlay2}
+        overlayStyle={styles.Overlay}
+      >
+        <Input
+          placeholder="Enter New Password"
+          leftIcon={{
+            type: "font-awesome",
+            name: "key",
+            paddingRight: "2%",
+            color: "#A9B9CD",
+          }}
+          secureTextEntry={true}
+          value={newPass}
+          onChangeText={setNewPass}
+        />
+        <TouchableOpacity style={styles.logBtn} onPress={() => updatePass()}>
+          <Text style={{ fontSize: 20, color: "white" }}>Confirm New Pass</Text>
+        </TouchableOpacity>
+      </Overlay>
+      {/*Overlays are till here  */}
       <View style={styles.top}>
         <Image
           style={styles.profilePic}
@@ -89,9 +138,17 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
         <Text>{userDetails.cell}</Text>
       </View>
       <View style={styles.bottom}>
-        <CustomList name="My Ads" icon="folder" />
+        <CustomList
+          name="My Ads"
+          icon="folder"
+          function={() => navigation.navigate("My Ads", { key: id })}
+        />
         <CustomList name="Reviews" icon="star" />
-        <CustomList name="Change Password" icon="key" />
+        <CustomList
+          name="Change Password"
+          icon="key"
+          function={() => setVisible2(true)}
+        />
         <CustomList
           name="Delete Account"
           icon="trash"
@@ -125,22 +182,6 @@ const LogOutRow = ({ setIsLoggedIn }) => {
     } catch (exception) {
       return false;
     }
-  };
-
-  const ChangePassModal = () => {
-    return (
-      <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-        <Text style={styles.textPrimary}>
-          Are you sure you want to delete you account?
-        </Text>
-        <TouchableOpacity style={styles.logBtn} onPress={() => deleteUser()}>
-          <Text style={{ fontSize: 20, color: "white" }}>Yes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.logBtn} onPress={() => toggleOverlay()}>
-          <Text style={{ fontSize: 20, color: "white" }}>No</Text>
-        </TouchableOpacity>
-      </Overlay>
-    );
   };
 
   return (
@@ -195,10 +236,15 @@ const styles = StyleSheet.create({
   logBtn: {
     marginTop: "10%",
     borderRadius: 20,
-    height: "15%",
+    height: "17%",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#222b45",
+  },
+  Overlay: {
+    width: "90%",
+    justifyContent: "center",
+    borderRadius: 20,
   },
 });
 export default ProfileScreen;

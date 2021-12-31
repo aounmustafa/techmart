@@ -12,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Chip, CheckBox, FAB } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddDetails = ({ navigation, route }) => {
   const [title, setTitle] = React.useState("");
@@ -21,10 +22,26 @@ const AddDetails = ({ navigation, route }) => {
   const [usedchecked, setUsedChecked] = React.useState(false);
   const [condition, setCondition] = React.useState("");
   const [image, setImage] = React.useState(null);
+  const [id, setId] = React.useState("");
+
   const category = route.params.item;
 
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
+
+  React.useEffect(() => {
+    getData();
+  });
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@userLog");
+      const a = JSON.parse(jsonValue);
+      setId(a[0]);
+      //  setUserDetails(a[1]);
+    } catch (e) {
+      // error reading value
+    }
+  };
   const postData = () => {
     let adObj = {
       Title: title,
@@ -32,6 +49,7 @@ const AddDetails = ({ navigation, route }) => {
       Price: price,
       Condition: condition,
       Category: category,
+      postedBy: id,
     };
     var requestOptions = {
       method: "POST",
