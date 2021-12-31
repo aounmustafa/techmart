@@ -37,13 +37,16 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
         for (let i in result) {
           if (result[i].emailID == email) {
             if (result[i].pass == password) {
+              console.log("checked");
+              setIsLoggedIn(true);
+              break;
+            } else {
+              break;
             }
-            setIsLoggedIn(true);
-          } else {
-            setLoader(false);
-            Alert.alert("Invalid Credentials", "Try Again");
           }
         }
+        setLoader(false);
+        Alert.alert("Invalid Credentials", "Try Again");
       })
       .catch((error) => console.log("error", error));
   };

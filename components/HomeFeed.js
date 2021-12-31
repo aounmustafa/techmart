@@ -8,52 +8,26 @@ import {
 } from "react-native";
 import { Card, Image, Chip, SearchBar, Avatar } from "react-native-elements";
 import * as React from "react";
+import { get } from "firebase/database";
 
 const HomeFeed = ({ navigation }) => {
-  const [products, setProducts] = React.useState([
-    {
-      name: "Gaming PC",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-      cat: "Pre-Builds",
-    },
+  const FIREBASE_API_ENDPOINT =
+    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
-    {
-      name: "Graphics Card",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-      cat: "Graphics Card",
-    },
-    {
-      name: "Mouse Pad",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-      cat: "Gaming Mouse",
-    },
-    {
-      name: "RAM",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-      cat: "RAM",
-    },
-    {
-      name: "SSD",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-    },
-    {
-      name: "Mouse",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-      cat: "Gaming Mouse",
-    },
-    {
-      name: "Gaming PC",
-      img: "https://images.unsplash.com/photo-1587302912306-cf1ed9c33146?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=680&q=80 ",
-      price: "Rs.45000",
-      cat: "Pre-Builds",
-    },
-  ]);
+  const getData = async () => {
+    let myArr = [];
+    const response = await fetch(`${FIREBASE_API_ENDPOINT}/ads.json`);
+    const data = await response.json();
+    for (let i in data) {
+      myArr.push(data[i]);
+    }
+    setProducts(myArr);
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+  const [products, setProducts] = React.useState([]);
   const [cat, setCat] = React.useState([
     "RAM",
     "Graphics Card",
@@ -68,17 +42,17 @@ const HomeFeed = ({ navigation }) => {
 
   const searchResults = () => {
     return products.filter((element) => {
-      return element.name.toUpperCase().includes(search.toUpperCase());
+      return element.Title.toUpperCase().includes(search.toUpperCase());
     });
   };
   const searchResultsSpecific = () => {
     return showFilteredCat().filter((element) => {
-      return element.name.toUpperCase().includes(search.toUpperCase());
+      return element.Title.toUpperCase().includes(search.toUpperCase());
     });
   };
   const showFilteredCat = () => {
     return products.filter((element) => {
-      return element.cat == catPressed;
+      return element.Category == catPressed;
     });
   };
 
@@ -125,9 +99,9 @@ const HomeFeed = ({ navigation }) => {
         }
         renderItem={({ item }) => (
           <ProductCard
-            name={item.name}
-            img={item.img}
-            price={item.price}
+            name={item.Title}
+            img="https://images.unsplash.com/photo-1621164071312-67bb68821b3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80"
+            price={item.Price}
             navigation={navigation}
           />
         )}

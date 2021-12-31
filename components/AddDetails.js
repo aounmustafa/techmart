@@ -11,7 +11,34 @@ import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
 const AddDetails = ({ navigation, route }) => {
+  const FIREBASE_API_ENDPOINT =
+    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
+  const postData = () => {
+    let adObj = {
+      Title: title,
+      Description: dsc,
+      Price: price,
+      Condition: condition,
+      Category: category,
+    };
+    var requestOptions = {
+      method: "POST",
+      body: JSON.stringify(adObj),
+    };
+
+    fetch(`${FIREBASE_API_ENDPOINT}/ads.json`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const [title, setTitle] = React.useState("");
+  const [dsc, setDsc] = React.useState("");
   const [price, setPrice] = React.useState("");
+  const [newchecked, setNewChecked] = React.useState(false);
+  const [usedchecked, setUsedChecked] = React.useState(false);
+  const [condition, setCondition] = React.useState("");
+
   const category = route.params.item;
   return (
     <View style={styles.container}>
@@ -31,13 +58,22 @@ const AddDetails = ({ navigation, route }) => {
           onPress={() => navigation.navigate("Select Category")}
           iconPosition="right"
         />
-        <TextInput placeholder="Title" style={styles.fields} maxLength={18} />
+        <TextInput
+          placeholder="Title"
+          style={styles.fields}
+          maxLength={18}
+          value={title}
+          onChangeText={setTitle}
+        />
+
         <TextInput
           placeholder="Description"
           style={styles.desc}
           maxLength={200}
           multiline={true}
           numberOfLines={5}
+          onChangeText={setDsc}
+          value={dsc}
         />
 
         <TextInput
@@ -56,7 +92,12 @@ const AddDetails = ({ navigation, route }) => {
             uncheckedIcon="circle-o"
             uncheckedColor="#A9B9CD"
             checkedColor="#0364ff"
-            checked={true}
+            checked={newchecked}
+            onPress={(title) => {
+              setNewChecked(true);
+              setUsedChecked(false);
+              setCondition("New");
+            }}
           />
           <CheckBox
             containerStyle={styles.checkBox}
@@ -66,6 +107,12 @@ const AddDetails = ({ navigation, route }) => {
             uncheckedIcon="circle-o"
             uncheckedColor="#A9B9CD"
             checkedColor="#0364ff"
+            checked={usedchecked}
+            onPress={() => {
+              setUsedChecked(true);
+              setNewChecked(false);
+              setCondition("Used");
+            }}
           />
         </View>
         <TouchableOpacity style={styles.insert}>
@@ -101,7 +148,7 @@ const AddDetails = ({ navigation, route }) => {
         placement="right"
         color="#0364ff"
         // title="PRoceed"
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => postData()}
       />
     </View>
   );
