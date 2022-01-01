@@ -8,8 +8,9 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 
-const MyAds = ({ route }) => {
+const MyAds = ({ route,navigation }) => {
   const {key } = route.params;
   const [myAds, setMyAds] = React.useState([]);
   const FIREBASE_API_ENDPOINT =
@@ -36,15 +37,14 @@ const MyAds = ({ route }) => {
         setMyAds(myArr)}
       
   React.useEffect(()=>{
-    getData()
-    //console.log(myAds)
-  },[id])
+    getData();
+  },[key])
     
   return (
     <View style={styles.container}>
       <FlatList
         data={myAds}
-        renderItem={({ item }) => <AdRow item={item.Title} />}
+        renderItem={({ item }) => <AdRow item={item.Title} totalItem={item} navigation={navigation} />}
         ListEmptyComponent={<EmptyMessage />}
        onRefresh={() => getData()}
        refreshing={false}
@@ -54,12 +54,14 @@ const MyAds = ({ route }) => {
 };
 const AdRow = (props) => {
   return (
-    <TouchableOpacity onPress={()=>EditAd()}>
+    <TouchableOpacity onPress={()=>props.navigation.navigate("Edit Ad",{ad:props.totalItem})}>
     <ListItem bottomDivider>
       <ListItem.Content>
         <TouchableOpacity>
           <ListItem.Title>{props.item}</ListItem.Title>
         </TouchableOpacity>
+
+        
       </ListItem.Content>
 
     </ListItem>

@@ -14,8 +14,7 @@ import FullAdScreen from "./components/FullAdScreen";
 import MyAds from "./components/MyAds";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ReportAdScreen from "./components/ReportAdScreen";
-
-// import { getAnalytics } from "firebase/analytics";
+import EditAddScreen from "./components/EditAddScreen"
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -114,6 +113,7 @@ const App = () => {
         <Stack.Screen name="Full Ad" component={FullAdScreen} />
         <Stack.Screen name="My Ads" component={MyAds} />
         <Stack.Screen name="Report Ad" component={ReportAdScreen} />
+        <Stack.Screen name="Edit Ad" component={EditAddScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
