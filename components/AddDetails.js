@@ -15,6 +15,7 @@ import { Icon } from "react-native-elements/dist/icons/Icon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddDetails = ({ navigation, route }) => {
+ 
   const [title, setTitle] = React.useState("");
   const [dsc, setDsc] = React.useState("");
   const [price, setPrice] = React.useState("");

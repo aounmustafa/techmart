@@ -40,11 +40,6 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
       .catch((error) => console.log("error", error));
   };
 
-  const userDetails = (key, obj) => {
-    //obj.id = JSON.stringify(key);
-    console.log(typeof key);
-  };
-
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value);

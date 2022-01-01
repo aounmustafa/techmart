@@ -10,38 +10,51 @@ import {
 } from "react-native";
 
 const MyAds = ({ route }) => {
-  const { id } = route.params;
-  const [ads, setAds] = React.useState([
-    "2Tb SSD",
-    "AMD Radeon 790",
-    "MousePad",
-  ]);
-
+  const {key } = route.params;
+  const [myAds, setMyAds] = React.useState([]);
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
-  const getData = async () => {
-    const response = await fetch(
-      `${FIREBASE_API_ENDPOINT}/ads/postedBy/${id}/.json`
-    )
-      .then((response) => response.json())
-      .then((result) => setSellerDetails(result))
-      .catch((error) => console.log(console.error()));
-  };
+    const getData = async () => {
+      let myArr = [];
+      const response = await fetch(`${FIREBASE_API_ENDPOINT}/ads/.json`)
+      const data = await response.json()
+      let keys=Object.keys(data)
+   
+      for (let i in keys) {
+        let adID=keys[i]
+        if(data[adID].postedBy==key){
+        let myObj={Title:data[adID].Title,
+                  Condition:data[adID].Condition,
+                  Category:data[adID].Category,
+                Price:data[adID].Price,
+                Description:data[adID].Description,
+              postedBy:data[adID].postedBy,
+          adID:adID}
+          myArr.push(myObj)}
+        }
+        setMyAds(myArr)}
+      
+  React.useEffect(()=>{
+    getData()
+    //console.log(myAds)
+  },[id])
+    
   return (
     <View style={styles.container}>
       <FlatList
-        data={ads}
-        renderItem={({ item }) => <AdRow item={item} />}
+        data={myAds}
+        renderItem={({ item }) => <AdRow item={item.Title} />}
         ListEmptyComponent={<EmptyMessage />}
-        // onRefresh={() => getData()}
-        // refreshing={refresh}
+       onRefresh={() => getData()}
+       refreshing={false}
       />
     </View>
   );
 };
 const AdRow = (props) => {
   return (
+    <TouchableOpacity onPress={()=>EditAd()}>
     <ListItem bottomDivider>
       <ListItem.Content>
         <TouchableOpacity>
@@ -49,15 +62,15 @@ const AdRow = (props) => {
         </TouchableOpacity>
       </ListItem.Content>
 
-      <Icon name="heart" type="font-awesome" color="#bb4a62" size={30} />
     </ListItem>
+    </TouchableOpacity>
   );
 };
 
 const EmptyMessage = () => {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={{ fontSize: 25 }}>No Favourties!</Text>
+      <Text style={{ fontSize: 25 }}>No Ads Posted!</Text>
     </View>
   );
 };

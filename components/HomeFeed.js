@@ -19,10 +19,18 @@ const HomeFeed = ({ navigation }) => {
     let myArr = [];
     const response = await fetch(`${FIREBASE_API_ENDPOINT}/ads.json`);
     const data = await response.json();
-    for (let i in data) {
-      myArr.push(data[i]);
-    }
-
+    let keys=Object.keys(data)
+    for (let i in keys) {
+      let id=keys[i]
+      let myObj={Title:data[id].Title,
+                Condition:data[id].Condition,
+                Category:data[id].Category,
+              Price:data[id].Price,
+              Description:data[id].Description,
+            postedBy:data[id].postedBy,
+        adID:id}
+        myArr.push(myObj)
+      }
     setProducts(myArr);
   };
 

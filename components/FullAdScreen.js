@@ -7,19 +7,23 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Linking
 } from "react-native";
-import { Divider, ListItem } from "react-native-elements";
+import { Divider, ListItem,Overlay,Input } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
-import { Linking } from "react-native";
 
 const FullAdScreen = ({ navigation, route }) => {
+   navigation.setOptions({title:route.params.ad.Category, headerRight: () => FavIcon()})
   const [sellerDetails, setSellerDetails] = React.useState({});
-
+  const [visible, setVisible] = React.useState(false);
+  const [report,setReport]=React.useState("")
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
   const { ad } = route.params;
-
   const getData = async () => {
     const id = ad.postedBy;
     const response = await fetch(`${FIREBASE_API_ENDPOINT}/users/${id}/.json`)
@@ -28,6 +32,10 @@ const FullAdScreen = ({ navigation, route }) => {
       .catch((error) => console.log(console.error()));
   };
 
+  const ReportIcon=()=>{
+    return( <TouchableOpacity><Icon name="ban" type="font-awesome" color="red" size={28} onPress={()=>setVisible(true)}/>
+    <Text>Report Ad</Text></TouchableOpacity>)
+  }
   React.useEffect(() => {
     getData();
   }, [ad]);
@@ -35,11 +43,67 @@ const FullAdScreen = ({ navigation, route }) => {
   const url =
     "https://images.unsplash.com/photo-1621164071312-67bb68821b3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80";
 
+
+    const FavIcon = () => {
+      // if (fav == false) {
+        return (
+          <Icon
+            name="heart"
+            type="evilicon"
+            color="#bb4a62"
+            size={38}
+            onPress={() => storeFav()}
+          />
+        );
+      }
+    //   return (
+    //     <Icon
+    //       name="heart"
+    //       type="font-awesome"
+    //       color="#bb4a62"
+    //       size={35}
+    //       onPress={() => unFav()}
+    //     />
+    //   );
+    // };
+  const sendReport= () => {
+    let fullReport = {
+      adId:ad.adID,
+      reportContent:report
+    };
+    console.log(fullReport);
+    var requestOptions = {
+      method: "POST",
+      body: JSON.stringify(fullReport),
+    };
+
+    fetch(`${FIREBASE_API_ENDPOINT}/reportedAds.json`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
   const dialup = (phoneNumber) => {
     Linking.openURL(`tel:${phoneNumber}`);
   };
   return (
     <View style={styles.container}>
+      
+  <Overlay
+        isVisible={visible}
+        onBackdropPress={toggleOverlay}
+        overlayStyle={styles.Overlay}
+      >
+        <Text style={styles.textPrimary}>
+          Report Ad
+        </Text>
+      <Input placeholder="Explain reason for reporting" maxLength={80} value={report} onChangeText={setReport} numberOfLines={3} rightIcon={<Text>{report.length}/80</Text>}/>
+      
+        <TouchableOpacity style={styles.logBtn} onPress={() => {sendReport();
+        toggleOverlay()}}>
+          <Text style={{ fontSize: 20, color: "white" }}>Report</Text>
+        </TouchableOpacity>
+      </Overlay>
       <View style={styles.top}>
         <Image style={styles.adPic} resizeMode="cover" source={{ uri: url }} />
         <Text style={styles.adTitle}>{ad.Title}</Text>
@@ -60,7 +124,12 @@ const FullAdScreen = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => dialup(sellerDetails.cell)}>
           <CustomList name={sellerDetails.cell} icon="phone" />
         </TouchableOpacity>
+
       </View>
+      
+      <TouchableOpacity style={styles.logBtn} onPress={() => authUser()}>
+            <Text style={styles.logBtnText}>Login</Text>
+          </TouchableOpacity>
     </View>
   );
 };
@@ -113,9 +182,37 @@ const styles = StyleSheet.create({
     padding: "5%",
     borderRadius: 15,
   },
+  logBtn: {
+    borderRadius: 20,
+    width: "100%",
+    height: "20%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0364ff",
+    margin: "5%",
+  },
   adTitle: {
     fontWeight: "bold",
     fontSize: 20,
+  }, Overlay: {
+    width: "90%",
+    justifyContent: "center",
+    borderRadius: 20,
+    alignItems:'center',
+  },
+  textPrimary: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "black",
+    marginBottom:"10%"
+  },
+  logBtn: {
+    borderRadius: 20,
+    height: "20%",
+    width:"80%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#222b45",
   },
 });
 export default FullAdScreen;

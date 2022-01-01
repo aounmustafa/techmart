@@ -13,6 +13,7 @@ import ProfileScreen from "./components/Profile";
 import FullAdScreen from "./components/FullAdScreen";
 import MyAds from "./components/MyAds";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ReportAdScreen from "./components/ReportAdScreen";
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -105,13 +106,14 @@ const App = () => {
           <Stack.Screen name="Home" component={MyTabs} />
         ) : (
           <>
-            <Stack.Screen name="Login" component={LoginScreenComp} />
+            <Stack.Screen name="Login" component={LoginScreenComp}/>
             <Stack.Screen name="Sign up" component={Register} />
           </>
         )}
         <Stack.Screen name="Add Details" component={AddDetails} />
         <Stack.Screen name="Full Ad" component={FullAdScreen} />
         <Stack.Screen name="My Ads" component={MyAds} />
+        <Stack.Screen name="Report Ad" component={ReportAdScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
