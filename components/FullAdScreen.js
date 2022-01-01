@@ -14,7 +14,7 @@ import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
 const FullAdScreen = ({ navigation, route }) => {
-   navigation.setOptions({title:route.params.ad.Category, headerRight: () => FavIcon()})
+   navigation.setOptions({title:route.params.ad.Category, headerRight: () => ReportIcon()})
   const [sellerDetails, setSellerDetails] = React.useState({});
   const [visible, setVisible] = React.useState(false);
   const [report,setReport]=React.useState("")
@@ -126,10 +126,6 @@ const FullAdScreen = ({ navigation, route }) => {
         </TouchableOpacity>
 
       </View>
-      
-      <TouchableOpacity style={styles.logBtn} onPress={() => authUser()}>
-            <Text style={styles.logBtnText}>Login</Text>
-          </TouchableOpacity>
     </View>
   );
 };

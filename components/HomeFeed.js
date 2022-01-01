@@ -36,7 +36,7 @@ const HomeFeed = ({ navigation }) => {
 
   React.useEffect(() => {
     getData();
-  }, []);
+  }, [navigation]);
   const [products, setProducts] = React.useState([]);
   const [cat, setCat] = React.useState([
     "RAM",

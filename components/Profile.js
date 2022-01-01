@@ -121,7 +121,7 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
           value={newPass}
           onChangeText={setNewPass}
         />
-        <TouchableOpacity style={styles.logBtn} onPress={() => updatePass()}>
+        <TouchableOpacity style={styles.logBtn} onPress={() => {updatePass();toggleOverlay2();}}>
           <Text style={{ fontSize: 20, color: "white" }}>Confirm New Pass</Text>
         </TouchableOpacity>
       </Overlay>
