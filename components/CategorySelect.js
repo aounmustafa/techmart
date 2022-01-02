@@ -1,4 +1,6 @@
-import {
+
+ import * as React from "react"
+ import {
   StyleSheet,
   Text,
   View,
@@ -6,7 +8,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import { Input, ListItem } from "react-native-elements";
+import { Input, ListItem ,Avatar} from "react-native-elements";
 
 const CategorySelect = ({ navigation }) => {
   navigation.setOptions({
@@ -15,38 +17,37 @@ const CategorySelect = ({ navigation }) => {
     headerStyle: { backgroundColor: "#0364ff" },
     headerTitleAlign: "center",
   });
-  const list = [
-    "RAM",
-    "Graphics Card",
-    "Monitor",
-    "Keyboard",
-    "Gaming Mouse",
-    "MotherBoards",
-    "Pre-Builds",
-    "RAM",
-    "Graphics Card",
-    "Monitor",
-    "Keyboard",
-    "Gaming Mouse",
-    "MotherBoards",
-    "Pre-Builds",
-    "Graphics Card",
-    "Monitor",
-    "Keyboard",
-    "Gaming Mouse",
-    "MotherBoards",
-    "Pre-Builds",
-  ];
+  const [catList,setCatList]=React.useState([])
+
+  const FIREBASE_API_ENDPOINT =
+    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
+
+    
+    const getCategories = async () => {
+      const response = await fetch(`${FIREBASE_API_ENDPOINT}/Categories.json`);
+      const data = await response.json();
+      let myArr=[]
+      for(let i in data){
+        let myObj={
+          name:data[i].name,
+          image:`data:image/png;base64,${data[i].image}`}
+    
+        myArr.push(myObj)
+      }
+      setCatList(myArr)
+  }
+  React.useEffect(()=>{
+    getCategories()
+  },[])
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <CategorySelector
-          list={list}
+          list={catList}
           navigation={navigation}
           navigateTo="Add Details"
         />
-        {/* <TextInput placeholder="Enter Title" style={styles.fields} /> */}
       </ScrollView>
     </View>
   );
@@ -57,12 +58,13 @@ const CategorySelector = (props) => {
     <View>
       {props.list.map((item, i) => (
         <ListItem key={i} bottomDivider>
+           <Avatar source={{uri: item.image}} />
           <ListItem.Content>
-            <ListItem.Title>{item}</ListItem.Title>
+            <ListItem.Title>{item.name}</ListItem.Title>
           </ListItem.Content>
           <TouchableOpacity
             onPress={() =>
-              props.navigation.navigate(props.navigateTo, { item: item })
+              props.navigation.navigate(props.navigateTo, { item: item.name })
             }
           >
             <ListItem.Chevron color="#0364ff" size={25} />
