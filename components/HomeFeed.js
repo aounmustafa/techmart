@@ -14,6 +14,28 @@ const HomeFeed = ({ navigation }) => {
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
+    const [products, setProducts] = React.useState([]);
+    const [cat, setCat] = React.useState([]);
+    const [search, setSearch] = React.useState("");
+    const [catPressed, setcatPressed] = React.useState("All");
+    const [loader, setLoader] = React.useState(false);
+  
+    const getCategories = async () => {
+      const response = await fetch(`${FIREBASE_API_ENDPOINT}/Categories.json`);
+      const data = await response.json();
+      let myArr=[]
+      for(let i in data){
+        let myObj={
+          name:data[i].name,
+          image:`data:image/png;base64,${data[i].image}`}
+    
+        myArr.push(myObj)
+      }
+      setCat(myArr)
+  }
+
+
+
   const getData = async () => {
     // setRefresher(true);
     let myArr = [];
@@ -36,20 +58,9 @@ const HomeFeed = ({ navigation }) => {
 
   React.useEffect(() => {
     getData();
+    getCategories()
   }, [navigation]);
-  const [products, setProducts] = React.useState([]);
-  const [cat, setCat] = React.useState([
-    "RAM",
-    "Graphics Card",
-    "Monitor",
-    "Keyboard",
-    "Gaming Mouse",
-    "MotherBoards",
-    "Pre-Builds",
-  ]);
-  const [search, setSearch] = React.useState("");
-  const [catPressed, setcatPressed] = React.useState("All");
-  const [loader, setLoader] = React.useState(false);
+
   const searchResults = () => {
     return products.filter((element) => {
       return element.Title.toUpperCase().includes(search.toUpperCase());
@@ -57,7 +68,7 @@ const HomeFeed = ({ navigation }) => {
   };
   const searchResultsSpecific = () => {
     return showFilteredCat().filter((element) => {
-      return element.Title.toUpperCase().includes(search.toUpperCase());
+      return element.toUpperCase().includes(search.toUpperCase());
     });
   };
   const showFilteredCat = () => {
@@ -87,9 +98,9 @@ const HomeFeed = ({ navigation }) => {
           />
           {cat.map((element, index) => (
             <Chip
-              type={catPressed == element ? "solid" : "outline"}
-              title={element}
-              onPress={() => setcatPressed(element)}
+              type={catPressed == element.name ? "solid" : "outline"}
+              title={element.name}
+              onPress={() => setcatPressed(element.name)}
               containerStyle={styles.chipContainer}
             />
           ))}
@@ -105,7 +116,7 @@ const HomeFeed = ({ navigation }) => {
             ? showFilteredCat()
             : search.length >= 1 && catPressed == "All"
             ? searchResults()
-            : searchResultsSpecific()
+            : searchResults()
         }
         renderItem={({ item }) => (
           <ProductCard

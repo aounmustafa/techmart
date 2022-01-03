@@ -8,22 +8,33 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-// import { TouchableOpacity } from "react-native-gesture-handler";
 
-const FavScreen = () => {
-  const [ads, setAds] = React.useState([
-    "2Tb SSD",
-    "AMD Radeon 790",
-    "MousePad",
-  ]);
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const FavScreen = ({navigation}) => {
+  const [ads, setAds] = React.useState([]);
+  React.useEffect(()=>{
+    
+    getFavs();
+  },[])
+
+  const getFavs= async () => {
+    
+    try {
+      const jsonValue = JSON.parse(await AsyncStorage.getItem("@Favs"));
+      setAds(jsonValue)
+    } catch (e) {
+      // error reading value
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={ads}
-        renderItem={({ item }) => <AdRow item={item} />}
+        renderItem={({ item }) => <AdRow item={item} navigation={navigation} />}
         ListEmptyComponent={<EmptyMessage />}
-        // onRefresh={() => getData()}
-        // refreshing={refresh}
+         onRefresh={() => getFavs()}
+        refreshing={false}
       />
     </View>
   );
@@ -32,12 +43,13 @@ const AdRow = (props) => {
   return (
     <ListItem bottomDivider>
       <ListItem.Content>
-        <TouchableOpacity>
-          <ListItem.Title>{props.item}</ListItem.Title>
+        <TouchableOpacity onPress={()=>props.navigation.navigate("Full Ad",{ad:props.item})}>
+          <ListItem.Title>{props.item.Title}</ListItem.Title>
+        
         </TouchableOpacity>
+        
       </ListItem.Content>
-
-      <Icon name="heart" type="font-awesome" color="#bb4a62" size={30} />
+      <ListItem.Chevron color="black"/>
     </ListItem>
   );
 };

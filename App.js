@@ -114,6 +114,7 @@ const App = () => {
         <Stack.Screen name="My Ads" component={MyAds} />
         <Stack.Screen name="Report Ad" component={ReportAdScreen} />
         <Stack.Screen name="Edit Ad" component={EditAddScreen} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
