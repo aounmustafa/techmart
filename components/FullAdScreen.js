@@ -229,7 +229,7 @@ const FullAdScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </Overlay>
       <View style={styles.top}>
-        <Image style={styles.adPic} resizeMode="cover" source={{ uri: url }} />
+        <Image style={styles.adPic} resizeMode="cover" source={{ uri: ad.image }} />
         <Text style={styles.adTitle}>{ad.Title}</Text>
       </View>
       <View style={styles.bottom}>

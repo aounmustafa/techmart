@@ -50,10 +50,12 @@ const HomeFeed = ({ navigation }) => {
               Price:data[id].Price,
               Description:data[id].Description,
             postedBy:data[id].postedBy,
+            image:`data:image/png;base64,${data[id].Image}`,
         adID:id}
         myArr.push(myObj)
       }
     setProducts(myArr);
+    console.log(products)
   };
 
   React.useEffect(() => {
@@ -121,7 +123,7 @@ const HomeFeed = ({ navigation }) => {
         renderItem={({ item }) => (
           <ProductCard
             name={item.Title}
-            img="https://images.unsplash.com/photo-1621164071312-67bb68821b3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80"
+            img={item.image}
             price={item.Price}
             navigation={navigation}
             ad={item}

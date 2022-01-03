@@ -13,6 +13,7 @@ import { Chip, CheckBox, FAB } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system'
 
 const AddDetails = ({ navigation, route }) => {
  
@@ -22,7 +23,8 @@ const AddDetails = ({ navigation, route }) => {
   const [newchecked, setNewChecked] = React.useState(false);
   const [usedchecked, setUsedChecked] = React.useState(false);
   const [condition, setCondition] = React.useState("");
-  const [image, setImage] = React.useState(null);
+  const [image, setImage] = React.useState(null)
+    const [base64,setbase64] = React.useState()
   const [id, setId] = React.useState("");
 
   const category = route.params.item;
@@ -43,6 +45,24 @@ const AddDetails = ({ navigation, route }) => {
       // error reading value
     }
   };
+
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        quality: 1,
+      });
+  
+      if (!result.cancelled) {
+        const base64 = await FileSystem.readAsStringAsync(result.uri, { encoding: 'base64' })
+        setImage(result.uri);
+        setbase64(base64)
+        
+  
+        //console.log(image);
+      }
+    }
+
   const postData = () => {
     let adObj = {
       Title: title,
@@ -51,6 +71,7 @@ const AddDetails = ({ navigation, route }) => {
       Condition: condition,
       Category: category,
       postedBy: id,
+      Image:base64
     };
     var requestOptions = {
       method: "POST",
@@ -63,21 +84,6 @@ const AddDetails = ({ navigation, route }) => {
       .catch((error) => console.log("error", error));
   };
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-
-      //console.log(image);
-    }
-  };
   return (
     <View style={styles.container}>
       <ScrollView
