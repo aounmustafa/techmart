@@ -48,22 +48,6 @@ const FullAdScreen = ({ navigation, route }) => {
   const url =
     "https://images.unsplash.com/photo-1621164071312-67bb68821b3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80";
 
-    // const getID = async () => {
-    //   setFav(true)
-    //   try {
-    //     const jsonValue = await AsyncStorage.getItem("@userLog")
-    //     .then((jsonValue)=>JSON.parse(jsonValue))
-    //     .then((a)=>storeFav(a[0])
-    //       );
-        
-      
-    //   } catch (e) {
-    //     // error reading value
-    //   }}
-    
-
-
-      
   const getFavs= async () => {
     
     try {
@@ -71,7 +55,7 @@ const FullAdScreen = ({ navigation, route }) => {
       if (jsonValue != null) {
    console.log("null naihi ha")
    for(let i in jsonValue){
-    console.log(ad)
+
     if (JSON.stringify(jsonValue[i])==JSON.stringify(ad)) {
           setFav(true);
         }}
@@ -120,54 +104,6 @@ const FullAdScreen = ({ navigation, route }) => {
       // saving error
     }
   };
-
-//       const checkFav= async ()=>{
-//  const response = await fetch(`${FIREBASE_API_ENDPOINT}/favs/.json`)
-//    .then((response) => response.json())
-//    .then((result) => {
-//      let keys=Object.keys(result)
-//     for(let i in keys){
-//       let j=keys[i]
-//       if(result[j].favedAd==ad.adID){
-//         setFav(true)
-//         setIdOfFav(j)
-//       } 
-//    }})
-//    .catch((error) => console.log(console.error()));
-// };
-   
-
-  //   const storeFav =  (i) => {
-      
-  //       let obj={userID:i,
-  //         favedAd:ad.adID
-  //       }
-  //       console.log(obj)
-  //     var requestOptions = {
-  //       method: "POST",
-  //       body: JSON.stringify(obj),
-  //     };
-  
-  //     fetch(`${FIREBASE_API_ENDPOINT}/favs.json`, requestOptions)
-  //       .then((response) => response.json())
-  //       .then((result) =>checkFav() )
-  //       .catch((error) => console.log("error", error));
- 
-  // };
-
-  // const unFav=()=>{
-  //   setFav(!fav)
-  //   var requestOptions = {
-  //     method: "DELETE",
-  //   };
-
-  //   fetch(`${FIREBASE_API_ENDPOINT}/favs/${idOfFav}.json`, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => console.log("Delet") )
-  //     .catch((error) => console.log("error", error));
-  // }
-    
-   
   const FavIcon = () => {
     if (fav == false) {
       return (

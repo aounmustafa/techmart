@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Chip, CheckBox, FAB } from "react-native-elements";
+import { Chip, CheckBox, FAB,Overlay } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,9 +24,10 @@ const AddDetails = ({ navigation, route }) => {
   const [usedchecked, setUsedChecked] = React.useState(false);
   const [condition, setCondition] = React.useState("");
   const [image, setImage] = React.useState(null)
-    const [base64,setbase64] = React.useState()
+  const [base64,setbase64] = React.useState()
   const [id, setId] = React.useState("");
 
+  const [visible, setVisible] = React.useState(false);
   const category = route.params.item;
 
   const FIREBASE_API_ENDPOINT =
@@ -40,9 +41,7 @@ const AddDetails = ({ navigation, route }) => {
       const jsonValue = await AsyncStorage.getItem("@userLog");
       const a = JSON.parse(jsonValue);
       setId(a[0]);
-      //  setUserDetails(a[1]);
     } catch (e) {
-      // error reading value
     }
   };
 
@@ -57,9 +56,6 @@ const AddDetails = ({ navigation, route }) => {
         const base64 = await FileSystem.readAsStringAsync(result.uri, { encoding: 'base64' })
         setImage(result.uri);
         setbase64(base64)
-        
-  
-        //console.log(image);
       }
     }
 
@@ -80,12 +76,27 @@ const AddDetails = ({ navigation, route }) => {
 
     fetch(`${FIREBASE_API_ENDPOINT}/ads.json`, requestOptions)
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => (toggleOverlay()))
       .catch((error) => console.log("error", error));
   };
 
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
   return (
     <View style={styles.container}>
+      
+      <Overlay
+        isVisible={visible}
+        onBackdropPress={toggleOverlay}
+        overlayStyle={styles.Overlay}
+      >
+        <Text style={styles.textPrimary}>
+          Your Ad has been posted!
+        </Text>
+       <Icon name="check" type="font-awesome" size={25} color="black"/>
+      </Overlay>
+
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
@@ -170,10 +181,6 @@ const AddDetails = ({ navigation, route }) => {
           <Text>Insert Images</Text>
         </TouchableOpacity>
 
-        {/* <Text style={{ marginLeft: 2, marginTop: 4, color: "#25374d" }}>
-          Max 4 Images allowed.
-        </Text> */}
-
         <View
           style={{
             flexDirection: "row",
@@ -207,27 +214,6 @@ const AddDetails = ({ navigation, route }) => {
     </View>
   );
 };
-
-// const MyComp = () => {
-//   return (
-//     <Card
-//       containerStyle={{
-//         width: "40%",
-//         padding: 0,
-//         borderWidth: 2,
-//       }}
-//     >
-//       {/* <Card.Title>none</Card.Title> */}
-//       {/* <Card.Divider /> */}
-//       <Card.Image
-//         //  style={styles.image}
-//         source={{
-//           uri: image,
-//         }}
-//       />
-//     </Card>
-//   );
-// };
 
 const styles = StyleSheet.create({
   container: {

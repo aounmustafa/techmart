@@ -12,6 +12,7 @@ import {
   import { Chip, CheckBox, FAB ,Overlay} from "react-native-elements";
   import * as React from "react";
   import { Icon } from "react-native-elements/dist/icons/Icon";
+  import * as FileSystem from 'expo-file-system'
   
   const EditAddScreen = ({ navigation, route }) => {
       navigation.setOptions({headerRight:()=>deleteIcon()})
@@ -30,8 +31,9 @@ import {
     const [newchecked, setNewChecked] = React.useState(false);
     const [usedchecked, setUsedChecked] = React.useState(false);
     const [condition, setCondition] = React.useState(ad.Condition);
-    const [image, setImage] = React.useState(null);
+    const [image, setImage] = React.useState(ad.image);
     
+  const [base64,setbase64] = React.useState()
   const [visible2, setVisible2] = React.useState(false);
      const [visible, setVisible] = React.useState(false);
     const category = route.params.item;
@@ -60,8 +62,22 @@ import {
      }
     },[ad]);
     
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        quality: 1,
+      });
+  
+      if (!result.cancelled) {
+        const base64 = await FileSystem.readAsStringAsync(result.uri, { encoding: 'base64' })
+        setImage(result.uri);
+        setbase64(base64)
+      }
+    }
   
     const updateAd = () => {
+      setVisible(true)
         const idOld = ad.adID
         var requestOptions = {
           method: 'PATCH',
@@ -76,31 +92,18 @@ import {
             Title: 
             title,
             postedBy: 
-            ad.postedBy
-            
+            ad.postedBy,
+            Image:
+            base64
           }),
         };
-    
+
         fetch(`${FIREBASE_API_ENDPOINT}/ads/${idOld}.json`, requestOptions)
           .then((response) => response.json())
-          .then((result) => setVisible(true))
+          .then((result) => navigation.navigate("Home"))
           .catch((error) => console.log('error', error));
       };
 
-    const pickImage = async () => {
-      // No permissions request is necessary for launching the image library
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-  
-      if (!result.cancelled) {
-        setImage(result.uri);
-
-      }
-    };
     const toggleOverlay = () => {
         setVisible(!visible);
       };
@@ -128,7 +131,7 @@ import {
 
            <Overlay
         isVisible={visible}
-        onBackdropPress={toggleOverlay}
+     
         overlayStyle={styles.Overlay}
       >
         <Text style={styles.textPrimary}>

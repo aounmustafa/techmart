@@ -50,7 +50,6 @@ const App = () => {
     const Home = () => {
       return <Icon name="home" type="font-awesome" color="#BEC0C8" size={22} />;
     };
-
     const Plus = () => {
       return <Icon name="plus" type="font-awesome" color="#BEC0C8" size={22} />;
     };
@@ -65,7 +64,7 @@ const App = () => {
     };
     return (
       <Tab.Navigator
-        initialRouteName="Home"
+       initialRouteName="Home"
         barStyle={{
           backgroundColor: "#222b45",
           height: "10%",
@@ -82,7 +81,7 @@ const App = () => {
         <Tab.Screen
           name="Favourties"
           component={FavScreen}
-          options={{ tabBarIcon: Fav }}
+          options={{ tabBarIcon: Fav}}
         />
 
         <Tab.Screen
@@ -98,11 +97,15 @@ const App = () => {
       </Tab.Navigator>
     );
   }
+  
+  const cartIcon=()=>{
+    return <Icon name="shopping-cart" type="font-awesome" color="black" size={20}/>
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {isLoggedin ? (
-          <Stack.Screen name="Home" component={MyTabs} />
+          <Stack.Screen name="Home" component={MyTabs} options={{title:"Tech Mart",headerTitleAlign:"center"}}/>
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginScreenComp}/>

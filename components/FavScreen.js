@@ -35,6 +35,7 @@ const FavScreen = ({navigation}) => {
         ListEmptyComponent={<EmptyMessage />}
          onRefresh={() => getFavs()}
         refreshing={false}
+        keyExtractor={(item) => item.postedBy}
       />
     </View>
   );

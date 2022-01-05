@@ -23,20 +23,19 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
       .then((response) => response.json())
       .then((result) => {
         for (let i in result) {
-          if (result[i].emailID == email) {
-            if (result[i].pass == password) {
+          if (result[i].emailID == email && result[i].pass == password) {
+
               let key = getKeyByValue(result, result[i]);
               storeData([key, result[i]]);
               setIsLoggedIn(true);
-              break;
-            } else {
-              break;
+             // break;
             }
           }
-        }
-        setLoader(false);
-        Alert.alert("Invalid Credentials", "Try Again");
-      })
+          
+           setLoader(false)
+           Alert.alert("Invalid Credentials", "Try Again");
+          })
+        
       .catch((error) => console.log("error", error));
   };
 
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     height: "20%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#0364ff",
+    backgroundColor: "#222b45",
     margin: "5%",
   },
   logBtnText: {

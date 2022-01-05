@@ -19,8 +19,7 @@ const CategorySelect = ({ navigation }) => {
   });
   const [catList,setCatList]=React.useState([])
 
-  const FIREBASE_API_ENDPOINT =
-    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
+  const FIREBASE_API_ENDPOINT ="https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     
     const getCategories = async () => {

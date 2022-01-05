@@ -8,7 +8,6 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 
 const MyAds = ({ route,navigation }) => {
   const {key } = route.params;
@@ -31,7 +30,9 @@ const MyAds = ({ route,navigation }) => {
                 Price:data[adID].Price,
                 Description:data[adID].Description,
               postedBy:data[adID].postedBy,
-          adID:adID}
+              image:`data:image/png;base64,${data[adID].Image}`,
+          adID:adID
+        }
           myArr.push(myObj)}
         }
         setMyAds(myArr)}
@@ -48,6 +49,7 @@ const MyAds = ({ route,navigation }) => {
         ListEmptyComponent={<EmptyMessage />}
        onRefresh={() => getData()}
        refreshing={false}
+       keyExtractor={(item) => item.adID}
       />
     </View>
   );
@@ -57,12 +59,9 @@ const AdRow = (props) => {
     <TouchableOpacity onPress={()=>props.navigation.navigate("Edit Ad",{ad:props.totalItem})}>
     <ListItem bottomDivider>
       <ListItem.Content>
-        <TouchableOpacity>
           <ListItem.Title>{props.item}</ListItem.Title>
-        </TouchableOpacity>
-
-        
       </ListItem.Content>
+      <ListItem.Chevron size={20} color={"black"}/>
 
     </ListItem>
     </TouchableOpacity>

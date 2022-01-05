@@ -55,7 +55,7 @@ const HomeFeed = ({ navigation }) => {
         myArr.push(myObj)
       }
     setProducts(myArr);
-    console.log(products)
+    
   };
 
   React.useEffect(() => {
@@ -127,8 +127,11 @@ const HomeFeed = ({ navigation }) => {
             price={item.Price}
             navigation={navigation}
             ad={item}
+
           />
+          
         )}
+        keyExtractor={(item) => item.adID}
         onRefresh={() => getData()}
         refreshing={false}
       />
@@ -146,13 +149,14 @@ const ProductCard = (props) => {
       />
       <View style={styles.cardBottomWrapper}>
         <Text style={styles.cardTitle}>{props.name}</Text>
-        <Text style={styles.priceText}>{props.price}</Text>
+        <Text style={styles.priceText}>Rs.{props.price}</Text>
       </View>
     </Card>
   );
 };
 const styles = StyleSheet.create({
   container: {
+    
     flex: 1,
   },
   catWrapper: {
@@ -179,6 +183,9 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 14,
+    borderWidth:1,
+    borderRadius:10,
+  padding:2
   },
   cardBottomWrapper: {
     flexDirection: "row",

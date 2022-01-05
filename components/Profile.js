@@ -16,6 +16,9 @@ import { Icon } from "react-native-elements/dist/icons/Icon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
+  navigation.setOptions({headerRight:()=>EditIcon()})
+
+
   const FIREBASE_API_ENDPOINT =
     "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
   navigation.setOptions({ title: "Profile" });
@@ -48,6 +51,10 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
       return false;
     }
   };
+
+  const EditIcon=()=>{
+    return <Icon name="trash" type="font-awesome" size={25} color="black"/>
+  }
   React.useEffect(() => {
     getData();
   }, []);
@@ -143,7 +150,7 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
           icon="folder"
           function={() => navigation.navigate("My Ads", { key: id })}
         />
-        <CustomList name="Reviews" icon="star" />
+        <CustomList name="Edit Profile" icon="pencil" />
         <CustomList
           name="Change Password"
           icon="key"
