@@ -14,6 +14,7 @@ import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FavScreen from "./FavScreen";
 
 const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
   navigation.setOptions({headerRight:()=>EditIcon()})
@@ -44,8 +45,9 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
     }
   };
   const clearLog = async () => {
+    let allKeys=["@userLog","@Favs"]
     try {
-      await AsyncStorage.removeItem("@userLog");
+      await AsyncStorage.multiRemove(allKeys);
       return true;
     } catch (exception) {
       return false;
@@ -182,9 +184,11 @@ const CustomList = (props) => {
 };
 
 const LogOutRow = ({ setIsLoggedIn }) => {
-  const clearLog = async () => {
+  
+  const clearLogWithFavs = async () => {
+    let allKeys=["@userLog","@Favs"]
     try {
-      await AsyncStorage.removeItem("@userLog");
+      await AsyncStorage.multiRemove(allKeys);
       return true;
     } catch (exception) {
       return false;
@@ -195,7 +199,7 @@ const LogOutRow = ({ setIsLoggedIn }) => {
     <TouchableOpacity
       onPress={() => {
         setIsLoggedIn(false);
-        clearLog();
+        clearLogWithFavs();
       }}
     >
       <ListItem bottomDivider>

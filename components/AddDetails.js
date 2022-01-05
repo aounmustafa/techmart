@@ -60,6 +60,7 @@ const AddDetails = ({ navigation, route }) => {
     }
 
   const postData = () => {
+    setVisible(true)
     let adObj = {
       Title: title,
       Description: dsc,
@@ -76,7 +77,7 @@ const AddDetails = ({ navigation, route }) => {
 
     fetch(`${FIREBASE_API_ENDPOINT}/ads.json`, requestOptions)
       .then((response) => response.json())
-      .then((result) => (toggleOverlay()))
+      .then((result) => navigation.navigate("Home"))
       .catch((error) => console.log("error", error));
   };
 
@@ -88,7 +89,6 @@ const AddDetails = ({ navigation, route }) => {
       
       <Overlay
         isVisible={visible}
-        onBackdropPress={toggleOverlay}
         overlayStyle={styles.Overlay}
       >
         <Text style={styles.textPrimary}>
@@ -110,7 +110,7 @@ const AddDetails = ({ navigation, route }) => {
             size: 25,
             color: "#0364ff",
           }}
-          onPress={() => navigation.navigate("Select Category")}
+          onPress={() => navigation.navigate("Home")}
           iconPosition="right"
         />
         <TextInput
@@ -204,10 +204,12 @@ const AddDetails = ({ navigation, route }) => {
       </ScrollView>
 
       <FAB
+      disabled={title.length<1 || price.length<1 || dsc.length<1 || condition.length<1 || image==null?true:false}
+      
         buttonStyle={{ borderRadius: 15 }}
         icon={<Icon name="check" type="font-awesome" color="white" />}
         placement="right"
-        color="#0364ff"
+        color="#222b45"
         // title="PRoceed"
         onPress={() => postData()}
       />

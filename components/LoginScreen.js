@@ -98,7 +98,6 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
             paddingRight: "2%",
             color: "#A9B9CD",
           }}
-          rightIcon={<TextClicker name="Forgot?" />}
           value={password}
           onChangeText={setpassword}
         />
