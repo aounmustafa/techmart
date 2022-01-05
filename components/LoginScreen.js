@@ -7,8 +7,9 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { Input } from "react-native-elements";
+import { Input,Overlay } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Icon } from "react-native-elements/dist/icons/Icon";
 
 const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const FIREBASE_API_ENDPOINT =
@@ -16,6 +17,12 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   const [email, setEmail] = React.useState("");
   const [password, setpassword] = React.useState("");
   const [loader, setLoader] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
+
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
 
   const authUser = async () => {
     setLoader(true);
@@ -27,13 +34,13 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
 
               let key = getKeyByValue(result, result[i]);
               storeData([key, result[i]]);
-              setIsLoggedIn(true);
-             // break;
+              setIsLoggedIn(true)
+            
             }
           }
           
            setLoader(false)
-           Alert.alert("Invalid Credentials", "Try Again");
+            setVisible(true)
           })
         
       .catch((error) => console.log("error", error));
@@ -53,6 +60,20 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   }
   return (
     <View style={styles.container}>
+
+         <Overlay
+        isVisible={visible}
+        onBackdropPress={()=>toggleOverlay()}
+
+        overlayStyle={styles.Overlay}
+      >
+        
+       <Icon name="times" type="font-awesome" size={30} color="red"/>
+        <Text style={styles.textPrimary}>
+        Invalid Credentials! Try Again
+        </Text>
+      </Overlay>
+
       <View style={styles.title}>
         <Text style={styles.loginTitle}>Login</Text>
       </View>
@@ -82,7 +103,9 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
           onChangeText={setpassword}
         />
         {loader == false ? (
-          <TouchableOpacity style={styles.logBtn} onPress={() => authUser()}>
+          <TouchableOpacity style={email.length<1 || password.length<1 ? styles.logBtnDisabled: styles.logBtn} 
+          disabled={email.length<1 || password.length<1 ? true:false}
+           onPress={() => authUser()}>
             <Text style={styles.logBtnText}>Login</Text>
           </TouchableOpacity>
         ) : (
@@ -135,6 +158,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#222b45",
     margin: "5%",
   },
+  logBtnDisabled: {
+    borderRadius: 20,
+    width: "100%",
+    height: "20%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#95979c",
+    margin: "5%",
+  },
   logBtnText: {
     color: "#fff",
     fontSize: 20,
@@ -160,6 +192,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingRight: "5%",
     paddingLeft: "5%",
+  },
+  Overlay: {
+    width: "90%",
+    justifyContent: "center",
+    borderRadius: 20,
+    padding:"10%"
+  },textPrimary: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "black",
   },
 });
 export default LoginScreen;
