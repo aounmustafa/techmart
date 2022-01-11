@@ -15,6 +15,8 @@ import MyAds from "./components/MyAds";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ReportAdScreen from "./components/ReportAdScreen";
 import EditAddScreen from "./components/EditAddScreen"
+import EditProfileScreen from "./components/EditProfileScreen"
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -108,8 +110,8 @@ const App = () => {
           <Stack.Screen name="Home" component={MyTabs} options={{title:"Tech Mart",headerTitleAlign:"center"}}/>
         ) : (
           <>
-            <Stack.Screen name="Login" component={LoginScreenComp}/>
-            <Stack.Screen name="Sign up" component={Register} />
+            <Stack.Screen name="Login" component={LoginScreenComp} options={{headerShown:false}}/>
+            <Stack.Screen name="Sign up" component={Register} options={{headerShown:false}} />
           </>
         )}
         <Stack.Screen name="Add Details" component={AddDetails} />
@@ -117,6 +119,7 @@ const App = () => {
         <Stack.Screen name="My Ads" component={MyAds} />
         <Stack.Screen name="Report Ad" component={ReportAdScreen} />
         <Stack.Screen name="Edit Ad" component={EditAddScreen} />
+        <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
         
       </Stack.Navigator>
     </NavigationContainer>

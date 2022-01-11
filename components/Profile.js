@@ -28,11 +28,15 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
   const [id, setId] = React.useState("");
   const [visible, setVisible] = React.useState(false);
   const [visible2, setVisible2] = React.useState(false);
+  const [visible3, setVisible3] = React.useState(false);
   const toggleOverlay = () => {
     setVisible(!visible);
   };
   const toggleOverlay2 = () => {
     setVisible2(!visible2);
+  };
+  const toggleOverlay3 = () => {
+    setVisible3(!visible3);
   };
   const getData = async () => {
     try {
@@ -89,7 +93,7 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
       .then((response) => response.json())
       .then((result) => {
         toggleOverlay2();
-        setNewPass("");
+        setVisible3(true)
       })
       .catch((error) => console.log("error", error));
   };
@@ -134,13 +138,28 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
           <Text style={{ fontSize: 20, color: "white" }}>Confirm New Pass</Text>
         </TouchableOpacity>
       </Overlay>
+
+
+      <Overlay
+        isVisible={visible3}
+        onBackdropPress={toggleOverlay3}
+        overlayStyle={styles.Overlay}
+      >
+        <Text style={styles.textPrimary}>
+        Password Updated!
+        </Text>
+
+       <Icon name="check" type="font-awesome" size={30} color="green"/>
+      </Overlay>
+
+
       {/*Overlays are till here  */}
+      
       <View style={styles.top}>
         <Image
           style={styles.profilePic}
           resizeMode="cover"
           source={{ uri: url }}
-          // onPress={() => props.navigation.navigate("Login")}
         />
         <Text>{userDetails.userName}</Text>
         <Text>{userDetails.emailID}</Text>
@@ -152,7 +171,7 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
           icon="folder"
           function={() => navigation.navigate("My Ads", { key: id })}
         />
-        <CustomList name="Edit Profile" icon="pencil" />
+        <CustomList name="Edit Profile" icon="pencil" function={()=>navigation.navigate("Edit Profile")}/>
         <CustomList
           name="Change Password"
           icon="key"

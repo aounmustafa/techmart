@@ -1,17 +1,18 @@
 import React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Input ,Overlay} from "react-native-elements";
-import { set } from "firebase/database";
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [username, setUserName] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [loader, setLoader] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
+  const [dupModal, setdupModal] = React.useState(false);
 
   const FIREBASE_API_ENDPOINT =
-    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/"; // << LOOK Here, provide URL of your Firebase Realtime Database
+    "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/"; 
 
   const postData = () => {
     setVisible(true)
@@ -32,8 +33,34 @@ const RegisterScreen = ({ navigation }) => {
       .then((result) => (navigation.navigate("Login")))
       .catch((error) => console.log("error", error));
   };
-  
 
+const checker= async()=>{
+  setLoader(true)
+  let duplicate=false;
+  const response = await fetch(`${FIREBASE_API_ENDPOINT}/users/.json`)
+  .then((response) => response.json())
+  .then((result) => {
+    for (let i in result) {
+      if (result[i].emailID == email || result[i].cell==phone) {
+        duplicate=true;
+        break;
+        }
+      }
+      if(duplicate){
+        setLoader(false)
+        setdupModal(true)
+
+      }
+      else{
+        postData();
+      }
+   
+    })
+   
+    
+  .catch((error) => console.log("error", error));
+  
+}
   return (
     <View style={styles.container}>
                <Overlay
@@ -48,6 +75,25 @@ const RegisterScreen = ({ navigation }) => {
 
        <Icon name="check" type="font-awesome" size={30} color="green"/>
       </Overlay>
+
+      <Overlay
+  
+        isVisible={dupModal}
+       onBackdropPress={()=>setdupModal(false)}
+
+        overlayStyle={styles.Overlay}
+      >
+      <View style={styles.closeIcon}>
+       <Icon  name="times" type="font-awesome" size={25} color="red"
+       onPress={()=>setdupModal(false)}
+       />
+       </View>
+        <Text style={styles.textPrimary}>
+        Email/Phone already Registered!
+        </Text>
+      </Overlay>
+
+
       <View style={styles.title}>
         <Text style={styles.loginTitle}>Sign up</Text>
       </View>
@@ -98,13 +144,20 @@ const RegisterScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
+        {
+          loader?
+          
+        <TouchableOpacity style={styles.logBtn}><ActivityIndicator size="large" color="white" animating={loader} />
+        </TouchableOpacity>:
         <TouchableOpacity
           style={email.length<1 || password.length<1 || username.length<1 || phone.length<1? styles.logBtnDisabled: styles.logBtn}
           disabled={email.length<1 || password.length<1 || username.length<1 || phone.length<1? true:false}
-          onPress={() => postData()}
+          onPress={() => checker()}
         >
           <Text style={styles.logBtnText}>Sign up</Text>
         </TouchableOpacity>
+        }
+        
       </View>
     </View>
   );
@@ -163,5 +216,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
   },
+  closeIcon:
+{flexDirection:"row",justifyContent:"flex-end",alignItems:"flex-end"},
 });
 export default RegisterScreen;

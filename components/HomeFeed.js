@@ -19,7 +19,7 @@ const HomeFeed = ({ navigation }) => {
     const [search, setSearch] = React.useState("");
     const [catPressed, setcatPressed] = React.useState("All");
     const [loader, setLoader] = React.useState(false);
-  
+    const [searchPlaceHolder,setSearchPlace]=React.useState(catPressed)
     const getCategories = async () => {
       const response = await fetch(`${FIREBASE_API_ENDPOINT}/Categories.json`);
       const data = await response.json();
@@ -31,6 +31,8 @@ const HomeFeed = ({ navigation }) => {
     
         myArr.push(myObj)
       }
+      let newObj={name:"All"}
+      myArr.unshift(newObj)
       setCat(myArr)
   }
 
@@ -61,16 +63,21 @@ const HomeFeed = ({ navigation }) => {
   React.useEffect(() => {
     getData();
     getCategories()
+    
   }, [navigation]);
 
+  React.useEffect(()=>{
+    setSearchPlace(catPressed)
+  })
   const searchResults = () => {
     return products.filter((element) => {
       return element.Title.toUpperCase().includes(search.toUpperCase());
     });
   };
   const searchResultsSpecific = () => {
+    // console.log(showFilteredCat())
     return showFilteredCat().filter((element) => {
-      return element.toUpperCase().includes(search.toUpperCase());
+      return element.Title.toUpperCase().includes(search.toUpperCase());
     });
   };
   const showFilteredCat = () => {
@@ -82,7 +89,7 @@ const HomeFeed = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <SearchBar
-        placeholder="Type Here..."
+        placeholder={"Search in "+searchPlaceHolder}
         onChangeText={setSearch}
         value={search}
         inputContainerStyle={{ backgroundColor: "#222b45", borderWidth: 0 }}
@@ -91,7 +98,17 @@ const HomeFeed = ({ navigation }) => {
         }}
       />
       <View style={styles.catWrapper}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        <FlatList
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={cat}
+        renderItem={({item})=><Chip
+        type={catPressed == item.name ? "solid" : "outline"}
+        title={item.name}
+        onPress={() => setcatPressed(item.name)}
+        containerStyle={styles.chipContainer}
+      />}/>
+        {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <Chip
             type={catPressed == "All" ? "solid" : "outline"}
             title="All"
@@ -99,14 +116,9 @@ const HomeFeed = ({ navigation }) => {
             containerStyle={styles.chipAll}
           />
           {cat.map((element, index) => (
-            <Chip
-              type={catPressed == element.name ? "solid" : "outline"}
-              title={element.name}
-              onPress={() => setcatPressed(element.name)}
-              containerStyle={styles.chipContainer}
-            />
+           c
           ))}
-        </ScrollView>
+        </ScrollView> */}
       </View>
 
       <FlatList
@@ -118,7 +130,7 @@ const HomeFeed = ({ navigation }) => {
             ? showFilteredCat()
             : search.length >= 1 && catPressed == "All"
             ? searchResults()
-            : searchResults()
+            : searchResultsSpecific()
         }
         renderItem={({ item }) => (
           <ProductCard
