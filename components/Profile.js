@@ -9,12 +9,12 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { ListItem, Overlay, Input } from "react-native-elements";
+import { ListItem, Overlay, Input,Divider } from "react-native-elements";
 import * as React from "react";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FavScreen from "./FavScreen";
+
 
 const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
   navigation.setOptions({headerRight:()=>EditIcon()})
@@ -156,14 +156,18 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
       {/*Overlays are till here  */}
       
       <View style={styles.top}>
-        <Image
+      <Image
           style={styles.profilePic}
           resizeMode="cover"
           source={{ uri: url }}
         />
-        <Text>{userDetails.userName}</Text>
-        <Text>{userDetails.emailID}</Text>
-        <Text>{userDetails.cell}</Text>
+        <View style={styles.inisdeTop} >
+        <Text style={{margin:5}}>{userDetails.userName+" |"}</Text>
+        
+        <Text style={{margin:5}}>{userDetails.emailID+" |"}</Text>
+        
+        <Text style={{margin:5}}>{userDetails.cell}</Text>
+        </View>
       </View>
       <View style={styles.bottom}>
         <CustomList
@@ -171,7 +175,7 @@ const ProfileScreen = ({ navigation, setIsLoggedIn }) => {
           icon="folder"
           function={() => navigation.navigate("My Ads", { key: id })}
         />
-        <CustomList name="Edit Profile" icon="pencil" function={()=>navigation.navigate("Edit Profile")}/>
+        {/* <CustomList name="Edit Profile" icon="pencil" function={()=>navigation.navigate("Edit Profile",{myUser:userDetails,myID:id})}/> */}
         <CustomList
           name="Change Password"
           icon="key"
@@ -254,6 +258,11 @@ const styles = StyleSheet.create({
     flex: 1.5,
     alignItems: "center",
     justifyContent: "center",
+   
+  },
+  inisdeTop:{
+    flexDirection:"row",
+    
   },
   bottom: {
     flex: 2,

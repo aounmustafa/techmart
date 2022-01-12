@@ -9,23 +9,90 @@ import {
     Button,
     TouchableOpacity,
   } from "react-native";
-  import { ListItem, Overlay, Input } from "react-native-elements";
+  import { ListItem, Input ,Overlay} from "react-native-elements";
   import * as React from "react";
   import { Icon } from "react-native-elements/dist/icons/Icon";
 
   const EditProfileScreen=({navigation,route})=>{
+navigation.setOptions({headerRight:()=>UpdateBtn()})
 
-    const [email, setEmail] = React.useState("");
-    const [username, setUserName] = React.useState("");
-    const [phone, setPhone] = React.useState("");
+const FIREBASE_API_ENDPOINT =
+  "https://fir-9d371-default-rtdb.asia-southeast1.firebasedatabase.app/";
+
+const UpdateBtn=()=>{
+  return(
+           <Icon name="check" type="font-awesome" color="white" 
+           disabled={ValidateEmail()==false || username.length<1 || phone.length!=11? true:false}
+           color="#0364ff"
+           onPress={() => updateUser()}
+         />)
+}
+    const {myUser}=route.params
+    const {myID}=route.params
+  
+    const [email, setEmail] = React.useState(myUser.emailID);
+    const [username, setUserName] = React.useState(myUser.userName);
+    const [phone, setPhone] = React.useState(myUser.cell);
+    const[visible,setVisible]=React.useState(false)
+
+    const updateUser = () => {
+      setVisible(true)
+        
+        var requestOptions = {
+          method: 'PATCH',
+          body: JSON.stringify({
+          cell:phone,
+          emailID:email,
+          pass:myUser.pass,
+          userName:username
+          }),
+        };
     
+        fetch(`${FIREBASE_API_ENDPOINT}/users/${myID}.json`, requestOptions)
+          .then((response) => response.json())
+          .then((result) => navigation.navigate("Home"))
+          .catch((error) => console.log('error', error));
+      };
+    
+    
+
+      const toggleOverlay = () => {
+        setVisible(!visible);
+      };
+
+
+    const ValidateEmail=()=> 
+  {
+   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+    {
+      return (true)
+    }
+      return (false)
+  }
+  
+    const url =
+    "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80";
       return(
         <View style={styles.container}>
-       
-<View style={styles.img}>
- 
-</View>
+       <Overlay
+        isVisible={visible}
+        onBackdropPress={toggleOverlay}
+        overlayStyle={styles.Overlay}
+      >
+        <Text style={styles.textPrimary}>
+        Details Updated!
+        </Text>
+
+       <Icon name="check" type="font-awesome" size={30} color="green"/>
+      </Overlay>
+       <Image
+          style={styles.profilePic}
+          resizeMode="cover"
+          source={{ uri: url }}
+        />
+
 <View style={styles.loginFieldsWrapper}>
+  
  <Input
    placeholder="Email ID"
    leftIcon={{
@@ -60,17 +127,11 @@ import {
    value={phone}
    onChangeText={setPhone}
  />
- <TouchableOpacity
-   style={email.length<1 || password.length<1 || username.length<1 || phone.length<1? styles.logBtnDisabled: styles.logBtn}
-   disabled={email.length<1 || password.length<1 || username.length<1 || phone.length<1? true:false}
-   onPress={() => postData()}
- >
-   <Text style={styles.logBtnText}>Sign up</Text>
- </TouchableOpacity>
+ 
+        
 </View>
-</View>
-      )
-  }
+</View>)}
+  
   const styles = StyleSheet.create({
     container: {
       flex: 1,
